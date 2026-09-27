@@ -1,0 +1,14 @@
+{
+  "name": "spamgen",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pixel-accurate Telegram chat-list screenshot generator, driven by a bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "render": "node tools/render-cli.js",
+    "selftest": "node tools/selftest.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {}
+}

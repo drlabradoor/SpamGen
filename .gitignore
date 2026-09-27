@@ -1,0 +1,10 @@
+.env
+.chrome/
+.tmp/
+data/sessions.json
+data/album/
+data/pins-seen.json
+out/*
+!out/demo.json
+node_modules/
+*.zip

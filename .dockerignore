@@ -1,0 +1,9 @@
+.env
+.chrome/
+.tmp/
+out/
+ref/
+docs/
+data/
+node_modules/
+*.zip
