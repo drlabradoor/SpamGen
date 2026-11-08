@@ -43,10 +43,13 @@ function normalize(cfg){
   rest.sort((a,b)=>key(b)-key(a));
   c.rows=[...pinned,...rest];
 
-  // status bar clock runs 1-3 min ahead of the newest chat
-  const newest=rest.map(key).filter(v=>v>=0)[0];
+  // The status bar clock shows exactly the time of the newest message on the
+  // screen (pinned rows included). It is derived on every normalize — so on
+  // every render — and is never randomised, so editing a row's time moves the
+  // clock with it and the two can never disagree.
+  const newest=Math.max(-1,...c.rows.map(key));
   c.chrome=c.chrome||{};
-  if(newest>=0&&!c.chrome.timeLocked) c.chrome.time=toHHMM(newest+rand(1,3));
+  if(newest>=0) c.chrome.time=toHHMM(newest);
 
   // The tab badge must agree with the list. Telegram's default badge counts
   // unread MESSAGES, not unread chats, so it starts as the sum of the row badges,
