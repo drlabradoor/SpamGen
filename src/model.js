@@ -29,6 +29,10 @@ function normalize(cfg){
   c.rows=(c.rows||[]).map(r=>({...r}));
 
   for(const r of c.rows){
+    // One spelling of a time for the row and the status bar: "9:05" typed by
+    // hand becomes "09:05", so the clock (always toHHMM) reads the same string.
+    const tm=toMin(r.time);
+    if(tm!=null)r.time=toHHMM(tm);
     // a chat cannot be both "you answered last" and "has unread"
     if(r.badge&&r.check){delete r.check;}
     if(r.badge!=null&&r.badge!==''&&Number(String(r.badge).replace(/\D/g,''))===0)delete r.badge;
