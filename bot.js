@@ -752,7 +752,7 @@ tg.poll(async u=>{
     const r=s.screen&&s.screen.rows[s.edit];
     if(r){
       if(s.ask==='time'&&toMin(t)==null)return tg.send(chat,'Время в формате 14:32.');
-      r[s.ask]=t;
+      r[s.ask]=s.ask==='time'?toHHMM(toMin(t)):t;
       s.ask=null;save();
       return tg.send(chat,cardText(r),cardKb(r));
     }
@@ -793,7 +793,10 @@ tg.poll(async u=>{
   if(s.step==='name'&&t){s.draft.name=t;s.step='text';save();return ask(chat,s);}
   if(s.step==='text'&&t){s.draft.text=t;s.step='time';save();return ask(chat,s);}
   if(s.step==='time'&&t){
-    s.draft.time=(t==='-'||t==='')?toHHMM(9*60+Math.floor(Math.random()*780)):t;
+    // Only a clock time: anything else would leave the row without a time the
+    // status bar can follow.
+    if(t!=='-'&&toMin(t)==null)return tg.send(chat,'Время в формате 14:32, или «-».');
+    s.draft.time=t==='-'?toHHMM(9*60+Math.floor(Math.random()*780)):toHHMM(toMin(t));
     s.step='avatar';save();return ask(chat,s);
   }
   return tg.send(chat,HELP);

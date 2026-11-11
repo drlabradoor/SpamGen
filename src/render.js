@@ -55,6 +55,8 @@ function render(cfgIn,outPng){
     }
     // The search field pushes the list down by exactly 162 device px.
     if(cfg.listTop==null)cfg.listTop=listTopFor(cfg);
+    // With a pinned chat on top, the header shares the pinned block's grey.
+    if(cfg.rows[0]&&cfg.rows[0].pin){cfg.chrome=cfg.chrome||{};cfg.chrome.pinnedTop=cfg.listTop;}
     const pf=await prefetch(cfg);
     const tmp=path.join(os.tmpdir(),'spamgen-'+Date.now()+'.html');
     fs.writeFileSync(tmp,buildHTML(cfg));

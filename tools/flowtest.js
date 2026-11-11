@@ -162,6 +162,26 @@ const toMin=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(String(t||''));return m?+m[1]
 
   await handler(cb('e:mute'));
   check('mute stuck',state().screen.rows[1].mute===true);
+
+  // The status bar clock follows the newest row on every render, including a
+  // time typed by hand without the leading zero.
+  const {buildHTML}=require('../src/render');
+  const clockOf=scr=>{
+    const h=buildHTML(require('../src/model').normalize(scr));
+    return [/<b>([^<]*)<\/b>/.exec(h)[1],/class="tm">([^<]*)</.exec(h)[1]];
+  };
+  let [clk,top]=clockOf(state().screen);
+  check('clock equals the newest row',clk===top&&clk==='21:00',clk+' vs '+top);
+  await handler(cb('e:time'));
+  await handler(msg('23:07'));
+  check('edited time stored',state().screen.rows[1].time==='23:07',state().screen.rows[1].time);
+  [clk,top]=clockOf(state().screen);
+  check('clock moved with the edited row',clk==='23:07'&&top==='23:07',clk+' vs '+top);
+  await handler(cb('e:time'));
+  await handler(msg('9:05'));
+  check('hand-typed time padded',state().screen.rows[1].time==='09:05',state().screen.rows[1].time);
+  [clk,top]=clockOf(state().screen);
+  check('clock back on the top row',clk===top&&clk==='21:00',clk+' vs '+top);
   const wasPrem=!!state().screen.rows[1].premium;
   await handler(cb('e:premium'));
   check('premium toggled and is hand-locked',

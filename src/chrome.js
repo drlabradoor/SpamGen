@@ -33,9 +33,16 @@ const CHROME_CSS=`
   background:#7f7f7f;border-radius:0 ${d(3)}px ${d(3)}px 0}
 
 #hdr{position:absolute;left:0;top:0;width:390px}
-.pill{position:absolute;top:${d(171)}px;height:${d(132)}px;border-radius:${d(66)}px;background:#181818}
+/* 2026-11 update (ref/IMG_new.png): the header buttons are separate glass
+   discs — Edit, then "+" and compose as two 132px circles, compose filled blue.
+   The glass is translucent white, so it reads 66 over the grey header a pinned
+   list gets and 43 over plain black; a brighter rim runs along the top edge. */
+.pill{position:absolute;top:${d(171)}px;height:${d(132)}px;border-radius:${d(66)}px;
+  background:rgba(255,255,255,.167);box-shadow:inset 0 ${d(3)}px ${d(2)}px rgba(255,255,255,.16)}
 .pill-l{left:${d(48)}px;width:${d(165)}px}
-.pill-r{left:${d(858)}px;width:${d(264)}px}
+.pill-p{left:${d(822)}px;width:${d(132)}px}
+.pill-c{left:${d(990)}px;width:${d(132)}px;background:#5589ef;
+  box-shadow:inset 0 ${d(3)}px ${d(2)}px rgba(255,255,255,.22)}
 .pill span{display:block;text-align:center;font-family:HDR;font-size:17.5px;color:#fff;line-height:${d(132)}px}
 .hdr-av{position:absolute;left:${d(456)}px;top:${d(191)}px;width:${d(93)}px;height:${d(93)}px;
   border-radius:50%;background:linear-gradient(150deg,#63d68a,#3aa0f0);padding:${d(5)}px;box-sizing:border-box}
@@ -44,11 +51,16 @@ const CHROME_CSS=`
 .hdr-ti{position:absolute;top:${d(206)}px;font-family:HDR;font-size:17.5px;color:#fff}
 .hdr-ti.with-av{left:${d(563)}px}
 .hdr-ti.solo{left:${d(526)}px}
-.h-plus{position:absolute;left:${d(870)}px;top:${d(180)}px;width:${d(83)}px;height:${d(86)}px}
+/* The glyph PNGs carry alpha (unmixed from the black they were cut on), so they
+   sit on the grey disc, the blue one and a grey pinned header alike. */
+.h-plus{position:absolute;left:${d(834)}px;top:${d(180)}px;width:${d(83)}px;height:${d(86)}px}
 .h-comp{position:absolute;left:${d(1030)}px;top:${d(204)}px;width:${d(81)}px;height:${d(92)}px}
+/* A pinned block is painted #1c1c1c, and the header above it takes the same
+   grey; over an unpinned list it stays black. */
+#hdr-bg{position:absolute;left:0;top:0;width:390px;background:#1c1c1c}
 
 #search{position:absolute;left:${d(48)}px;top:${d(333)}px;width:${d(1074)}px;height:${d(128)}px;
-  border-radius:${d(64)}px;background:#191919;display:flex;align-items:center;
+  border-radius:${d(64)}px;background:rgba(255,255,255,.097);display:flex;align-items:center;
   justify-content:center;gap:${d(27)}px}
 #search img{width:${d(48)}px;height:${d(48)}px;display:block}
 #search span{font-family:HDRR;font-size:17.5px;color:#8f8f8f;line-height:1}
@@ -70,7 +82,7 @@ function chromeHTML(c){
   const bolt='<svg viewBox="0 0 10 16"><path d="M6.6 0 0.7 8.6h3.3L3.2 16 9.3 7.1H5.9L6.6 0z"/></svg>';
   // No story avatar in the header: the title is always centred on its own.
   // The account picture lives on the Settings tab, and nowhere else.
-  return `<div id="status">
+  return `${c.pinnedTop?`<div id="hdr-bg" style="height:${d(c.pinnedTop)}px"></div>`:''}<div id="status">
     <div class="st-left"><b>${c.time||'19:15'}</b>${geo}</div>
     ${c.island===false?'':`<img class="st-isl" src="${A}icons/island.png">`}
     <img class="st-sig" src="${A}icons/signal.png">
@@ -81,7 +93,8 @@ function chromeHTML(c){
   <div id="hdr">
     <div class="pill pill-l"><span>Edit</span></div>
     <div class="hdr-ti solo">Chats</div>
-    <div class="pill pill-r"></div>
+    <div class="pill pill-p"></div>
+    <div class="pill pill-c"></div>
     <img class="h-plus" src="${A}icons/hplus.png">
     <img class="h-comp" src="${A}icons/hcompose.png">
   </div>
